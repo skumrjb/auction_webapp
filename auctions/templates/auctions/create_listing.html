@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>Create Listing</h2>
+
+    <h5>Welcome {{user}}</h5>
+
+    <!-- {% if message %}
+        <div>{{ message }}</div>
+    {% endif %} -->
+
+    <form action="{% url 'create_listing' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autofocus class="form-control" type="text" name="title" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="url" name="img" placeholder="Image URL">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="description" placeholder="Listing Description">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="number" name="starting_bid" placeholder="Initial Bid">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="category" placeholder="category">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Create Listing">
+    </form>
+
+    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+
+{% endblock %}

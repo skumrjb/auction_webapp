@@ -1,0 +1,62 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h2>Listing: {{listing.title}}</h2>
+
+<figure class="figure">
+    <img src="{{listing.img}}" class="figure-img img-fluid rounded" alt="...">
+    <figcaption class="figure-caption">{{listing.description}}</figcaption>
+</figure>
+<div>
+    {% if listing.last_bid is None %}
+        <h3>Bid value: ${{listing.starting_bid}}</h3>
+    {% else %}
+    <h3>Bid value : ${{listing.last_bid}}</h3>
+    {% endif %}
+    <div>
+        <span>{{listing.bids.count}} bid(s) so far. Your bid is the current bid</span>
+    </div>
+    <div>
+        <form action="{% url 'bid' listing=listing.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="text" name="bid_price" placeholder="Bid">
+            </div>
+            <button name="bid" class="btn btn-outline-primary" type="submit" value="Place Bid">Place Bid</button>
+        </form>
+        <form action="{% url 'add_watchlist' listing=listing.id %}" method="post">
+            {% csrf_token %}
+            <button name="bid" class="btn btn-outline-success" type="submit" value="Watchlist">Watchlist</button>
+        </form>
+    </div>
+<div>  
+    <h3>Details</h3>
+    <ul>
+        <li>Listed by: {{listing.user}}</li>
+        <li>Category: {{listing.category}}</li>
+        <li>Created on: {{listing.created_on}}</li>
+    </ul>
+</div>
+<div id="comments">
+    <h3>Comments:</h3>
+        <form action="{% url 'add_comment' listing=listing.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="text" name="comment" placeholder="Add a comment">
+            </div>
+            <button name="bid" class="btn btn-outline-primary" type="submit" value="Comment">Comment</button>
+        </form>
+        {% if not listing.comments.all %}
+        <p>There are no comments for this listing</p>
+        {% else %}
+            {% for comment in listing.comments.all %}
+                <ul>
+                    <li> {{comment.user}} - {{comment.comment_date}} : {{comment.comment}}</li>
+                </ul>
+            {% endfor %}
+        {% endif %}
+</div>
+
+{% endblock %}
+
