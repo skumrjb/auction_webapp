@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .forms import ListingForm, BidForm, CommentForm
+from .forms import ListingForm, BidForm, CommentForm, CloseListingForm
 from django.core.exceptions import ValidationError
 
 from .models import User, AuctionListing, Bid, Comment, WatchList
@@ -214,4 +214,36 @@ def add_comments(request, listing):
             listing_comment.save()
 
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def close_listing (request, listing):
+
+    user = request.user
+    if user.id is None:
+        return redirect('login')
+
+    listing_to_close = AuctionListing.objects.get(id=listing)
+
+    if user == listing_to_close.user :
+        print('hi')
+        if request.method == 'POST':
+            form = CloseListingForm(request.POST or None)
+            if form.is_valid():
+                closed = form.cleaned_data['closed']
+                closure = AuctionListing.objects.create(
+                    user=user,
+                    closed=True)
+                closure.save()
+        
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    else:
+        data = {
+            'message' : 'Sorry, you are not authorised to close the bid'
+        }
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'), data)
+
+    
+            
+
 

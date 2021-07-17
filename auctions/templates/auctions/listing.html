@@ -3,6 +3,17 @@
 {% block body %}
 
 <h2>Listing: {{listing.title}}</h2>
+{% if listing.closed %}
+    <div id="close-listing">
+    <h3> The listing is closed for bidding and won by {{listing.last_bid.user}}</h3>
+    </div>
+{% elif not listing.closed %}
+    <form action="{% url 'close_listing' listing=listing.id %}" method="post">
+        {% csrf_token %}
+        <button name="close-listing" class="btn btn-danger" type="submit" value="closed">Close Bid for Auction</button>
+{% else %}
+        {{message}}
+{% endif %}
 
 <figure class="figure">
     <img src="{{listing.img}}" class="figure-img img-fluid rounded" alt="...">
