@@ -7,12 +7,14 @@
     <div id="close-listing">
     <h3> The listing is closed for bidding and won by {{listing.last_bid.user}}</h3>
     </div>
-{% elif not listing.closed %}
-    <form action="{% url 'close_listing' listing=listing.id %}" method="post">
-        {% csrf_token %}
-        <button name="close-listing" class="btn btn-danger" type="submit" value="closed">Close Bid for Auction</button>
 {% else %}
-        {{message}}
+    {% if listing.user == user %}
+        <form action="{% url 'close_listing' listing=listing.id %}" method="post">
+            {% csrf_token %}
+            <button name="close-listing" class="btn btn-danger" type="submit" value="closed">Close Bid for Auction</button>
+    {% else %}
+        <h3>{{message}}</h3>
+    {% endif %}
 {% endif %}
 
 <figure class="figure">
@@ -29,6 +31,17 @@
         <span>{{listing.bids.count}} bid(s) so far. Your bid is the current bid</span>
     </div>
     <div>
+        {% if listing.closed == True %}
+        <form action="{% url 'bid' listing=listing.id %}" method="post">
+            <fieldset disabled='disabled'>
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="text" name="bid_price" placeholder="Bid">
+            </div>
+            <button name="bid" class="btn btn-outline-primary" type="submit" value="Place Bid">Place Bid</button>
+            </fieldset>
+        </form>
+        {% else %}
         <form action="{% url 'bid' listing=listing.id %}" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -40,17 +53,29 @@
             {% csrf_token %}
             <button name="bid" class="btn btn-outline-success" type="submit" value="Watchlist">Watchlist</button>
         </form>
+        {% endif %}
     </div>
 <div>  
     <h3>Details</h3>
     <ul>
-        <li>Listed by: {{listing.user}}</li>
-        <li>Category: {{listing.category}}</li>
+        <li>Listed by: <a href="{% url 'user_listings' listing.id %}">{{listing.user}}</a></li>
+        <li>Category: <a href="{% url 'category_listing' listing.category %}">{{listing.category}}</a></li>
         <li>Created on: {{listing.created_on}}</li>
     </ul>
 </div>
 <div id="comments">
     <h3>Comments:</h3>
+        {% if listing.closed == True %}
+        <form action="{% url 'add_comment' listing=listing.id %}" method="post">
+            <fieldset disabled='disabled'>
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="text" name="comment" placeholder="Add a comment">
+            </div>
+            <button name="bid" class="btn btn-outline-primary" type="submit" value="Comment">Comment</button>
+            </fieldset>
+        </form>
+        {% else %}
         <form action="{% url 'add_comment' listing=listing.id %}" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -58,6 +83,7 @@
             </div>
             <button name="bid" class="btn btn-outline-primary" type="submit" value="Comment">Comment</button>
         </form>
+        {% endif %}
         {% if not listing.comments.all %}
         <p>There are no comments for this listing</p>
         {% else %}

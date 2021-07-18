@@ -3,16 +3,17 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .forms import ListingForm, BidForm, CommentForm, CloseListingForm
+from .forms import ListingForm, BidForm, CommentForm
 from django.core.exceptions import ValidationError
+from django.db.models import Count
 
 from .models import User, AuctionListing, Bid, Comment, WatchList
 
 
 def index(request):
-    auction_listing = AuctionListing.objects.order_by('-created_on')
+    auction_listing = AuctionListing.objects.filter(closed=False).order_by('-created_on')
     return render(request, "auctions/index.html", {
-        'listings': auction_listing
+        'active_listings': auction_listing
     })
 
 
@@ -120,7 +121,7 @@ def listing(request, listing):
     }
     return render(request, 'auctions/listing.html', data)
 
-def bidding (request, listing):
+def bidding(request, listing):
 
     bidding_for_listing = AuctionListing.objects.get(id=listing)
     
@@ -216,7 +217,7 @@ def add_comments(request, listing):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def close_listing (request, listing):
+def close_listing(request, listing):
 
     user = request.user
     if user.id is None:
@@ -225,25 +226,79 @@ def close_listing (request, listing):
     listing_to_close = AuctionListing.objects.get(id=listing)
 
     if user == listing_to_close.user :
-        print('hi')
         if request.method == 'POST':
-            form = CloseListingForm(request.POST or None)
-            if form.is_valid():
-                closed = form.cleaned_data['closed']
-                closure = AuctionListing.objects.create(
-                    user=user,
-                    closed=True)
-                closure.save()
+            listing_to_close.closed = True
+            listing_to_close.save()
         
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        data = {
+            'user': user
+        }
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'), data)
 
     else:
         data = {
+            'user' : user,
             'message' : 'Sorry, you are not authorised to close the bid'
         }
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'), data)
 
     
-            
+def category_view(request):
+    user = request.user
+    if user.id is None:
+        return redirect('login')
+    category_listing = AuctionListing.objects.values('category')
+    # aggregate = category_listing.annotate(category=Count('*'))
+    category = set( val for dic in category_listing for val in dic.values())
+    print(category)
+    return render(request, "auctions/category.html", {
+        'category': category
+    })
 
+def category_listing(request, category):
+    user = request.user
+    if user.id is None:
+        return redirect('login')
 
+    listings = AuctionListing.objects.filter(category=category)
+    print(category)
+    return render(request, "auctions/category.html", {
+        'listings': listings,
+        'cat':category
+    })
+
+def my_listings(request):
+    user = request.user
+    if user.id is None:
+        return redirect('login')
+
+    listings = AuctionListing.objects.filter(user=user)
+    return render(request, "auctions/user_listings.html", {
+        'listings': listings,
+        'user': user
+    })
+
+def user_listings(request, listing):
+    user = request.user
+    if user.id is None:
+        return redirect('login')
+
+    listings = AuctionListing.objects.get(id=listing)
+    
+    if listings.user != user:
+        listing_filter = AuctionListing.objects.filter(user=listings.user)
+        return render(request, "auctions/user_listings.html", {
+            'listings': listing_filter,
+            'listings_creator': listings.user,
+            'visitor_user': user
+        })
+    
+    else:
+        return my_listings(request)
+
+def closed_auction(request):
+    closed_listing = AuctionListing.objects.filter(closed=True)
+    return render(request, "auctions/index.html", {
+        'closed_listings': closed_listing
+    })

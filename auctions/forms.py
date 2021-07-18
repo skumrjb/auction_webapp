@@ -34,12 +34,3 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'comment' : forms.TextInput(attrs={'class': 'form-control'})
         }
-
-class CloseListingForm(forms.ModelForm):
-
-    class Meta:
-        model = AuctionListing
-        fields = ['closed']
-        widgets = {
-            'closed' : forms.BooleanField()
-        }

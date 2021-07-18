@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+
+{% if not visitor_user %}
+    <h2>Hello {{user}} </h2>
+    
+    <h2>Your listings for auction: </h2>
+
+    {% for listing in listings %}
+    <ul>
+        <li><a href="{% url 'listing' listing.id %}">{{listing.title}}</a></li>
+    </ul>
+    {% endfor %}
+
+{% else %}
+    <h2>Hello visitor {{visitor_user}}</h2>
+
+    <h2>{{listings_creator}}'s listings for auction: </h2>
+
+    {% for listing in listings %}
+    <ul>
+        <li><a href="{% url 'listing' listing.id %}">{{listing.title}}</a></li>
+    </ul>
+    {% endfor %}
+
+{% endif %}
+{% endif %}
+
+
+{% endblock %}

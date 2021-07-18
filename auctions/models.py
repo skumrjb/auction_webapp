@@ -9,7 +9,7 @@ class User(AbstractUser):
 
 class AuctionListing(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='user_creating_the_listing')
-    category = models.CharField(max_length=64, blank=True)
+    category = models.CharField(max_length=64)
     # Auction Listing details
     title = models.CharField(max_length=64)
     img= models.URLField(blank=True, default='')

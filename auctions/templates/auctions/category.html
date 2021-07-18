@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+
+    <h2>Hello</h2>
+
+    {% if category %}
+        <h2>Categories </h2>
+
+        {% for categ in category %}
+        <ul>
+            <li><a href="{% url 'category_listing' categ %}">{{categ}}</a></li>
+        </ul>
+        {% endfor %}
+
+    {% else %}
+        <h2><a href="{% url 'category' %}">Categories</a> - {{cat}}</h2>
+        {% for listing in listings %}
+        <ul>
+            <li><a href="{% url 'listing' listing.id %}">{{listing.title}}</a></li>
+        </ul>
+        {% endfor %}
+
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}
