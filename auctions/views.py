@@ -108,7 +108,8 @@ def create_listing(request):
             return redirect('index')
 
 def listing(request, listing):
-    if request.user.id is None:
+    user = request.user
+    if user.id is None:
         return redirect('login')
     
     # instantiate watchlist
@@ -249,9 +250,8 @@ def category_view(request):
     if user.id is None:
         return redirect('login')
     category_listing = AuctionListing.objects.values('category')
-    # aggregate = category_listing.annotate(category=Count('*'))
+    # Create a set of unique values from the category_listing dict
     category = set( val for dic in category_listing for val in dic.values())
-    print(category)
     return render(request, "auctions/category.html", {
         'category': category
     })
@@ -262,7 +262,6 @@ def category_listing(request, category):
         return redirect('login')
 
     listings = AuctionListing.objects.filter(category=category)
-    print(category)
     return render(request, "auctions/category.html", {
         'listings': listings,
         'cat':category
