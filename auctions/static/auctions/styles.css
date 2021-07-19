@@ -1,3 +1,21 @@
 body {
     padding: 10px;
+    padding-top: 50px;
+}
+
+nav {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    
+    width: 100%;
+  }
+
+.login-page {
+    outline: solid red 10pt;
+    color: red;
+}
+
+.container-city{
+    border: solid red 10px;
 }

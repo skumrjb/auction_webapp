@@ -2,46 +2,147 @@
 
 <!DOCTYPE html>
 <html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <head>
         <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <!-- Font Awesome -->
+        <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        rel="stylesheet"
+        />
+        <!-- Google Fonts -->
+        <link
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        rel="stylesheet"
+        />
+        <!-- MDB -->
+        <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css"
+        rel="stylesheet"
+        />
+        <!-- MDB -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" 
+        crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" 
+        crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+        crossorigin="anonymous"></script>
+        
+        <!-- Tooltip-->
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip({
+                    placement : 'top'
+                });
+            });
+        </script>
+
+        <!--Custom CSS-->
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
+        <!-- Navbar-->
+    <nav class="navbar navbar-expand-lg static-top navbar-light bg-light">
+    <div class="container-fluid justify-content-between">
+      <!-- Left elements -->
+      <div class="d-flex">
+        <!-- Brand -->
+        <a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
+          <img
+            src="{% static 'auctions/Leita_logo.png' %}"
+            height="75"
+            alt=""
+            loading="lazy"
+            style="margin-top: 2px;"
+          />
+        </a>
+        <!-- Search form -->
+        <form class="input-group w-auto my-auto d-none d-sm-flex">
+          <input
+            autocomplete="off"
+            type="search"
+            class="form-control rounded"
+            placeholder="Search"
+            style="min-width: 750px;"
+          />
+          <span class="input-group-text border-0 d-none d-lg-flex"
+            ><i class="fas fa-search"></i
+          ></span>
+        </form>
+      </div>
+      <!-- Left elements -->
+  
+      <!-- Center elements -->
+      <ul class="navbar-nav flex-row">
+        <li class="nav-item me-3 me-lg-1">
             {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
+            <div class="dropdown show">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Logged in: {{user.username}}
+                </a>
+              
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </div>
             {% else %}
-                Not signed in.
+                    Please sign in.
             {% endif %}
-        </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
+          </a>
+        </li>
+      </ul>
+      
+    <!-- End of Center elements -->
+  
+    <!-- Right elements -->
+        <!-- Home -->
+        <ul class="navbar-nav flex-row d-none d-md-flex">
+        <li class="nav-item me-3 me-lg-1 active">
+            <a class="nav-link" href="{% url 'index' %}">
+            <span><i class="fas fa-home fa-2x" data-toggle="tooltip" title="Home"></i></span>
+            <span class="badge rounded-pill badge-notification bg-danger"></span>
+        </a>
+        </li>
+        
+        <!--User Watchlist-->
+        {% if user.is_authenticated %}
+        <li class="nav-item me-3 me-lg-1">
+            <a class="nav-link" href="{% url 'user_watchlist' %}">
+            <span><i class="fas fa-binoculars fa-2x" data-toggle="tooltip" title="My Watchlist"></i></span>
+            <span class="badge rounded-pill badge-notification bg-danger">0</span>
+        </a>
+        </li>
+        {% endif %}
+
+        <!-- Create a Listing-->
+        {% if user.is_authenticated %}
+        <li class="nav-item me-3 me-lg-1">
+        <a class="nav-link" href="{% url 'create_listing' %}">
+            <span><i class="fas fa-plus fa-2x" data-toggle="tooltip" title="Create a new listing""></i></span>
+        </a>
+        </li>
+        {% else %}
+        <a class="nav-link" href="{% url 'login' %}"></a>
+        {% endif %}
+
+        <!-- Login/Logout -->
+        <li class="nav-item me-3 me-lg-1">
             {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create_listing' %}">Create Listing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'user_watchlist' %}">Watchlist</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'category' %}">Categories</a>
-                </li>
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <span><i class="fas fa-power-off fa-2x" data-toggle="tooltip" title="Logout"></i></span>
+                </a>
             {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
+            <a class="nav-link" href="{% url 'login' %}">
+                <span><i class="fas fa-power-off fa-2x" data-toggle="tooltip" title="Login"></i></span>
+            </a>
             {% endif %}
-        </ul>
+        </li>
+    </ul>
+    <!-- End of Right elements -->
+    </div>
+  </nav>
         <hr>
         {% block body %}
         {% endblock %}
