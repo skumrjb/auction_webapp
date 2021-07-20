@@ -5,16 +5,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import ListingForm, BidForm, CommentForm
 from django.core.exceptions import ValidationError
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from .models import User, AuctionListing, Bid, Comment, WatchList
 
 
 def index(request):
     auction_listing = AuctionListing.objects.filter(closed=False).order_by('-created_on')
-    return render(request, "auctions/index.html", {
-        'active_listings': auction_listing
-    })
+    return render(request, "auctions/index.html",{
+        'active_listings': auction_listing })
 
 
 def login_view(request):
@@ -301,3 +300,14 @@ def closed_auction(request):
     return render(request, "auctions/index.html", {
         'closed_listings': closed_listing
     })
+
+def search(request):
+    if request.method == "POST":
+        query = request.POST.get('q')
+        search = AuctionListing.objects.filter(Q(title__icontains=query))
+        return render(request, "auctions/search.html", {
+        'search': search,
+        'query' : query
+        })
+    else:
+        return redirect('index')
