@@ -1,35 +1,51 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
 {% block body %}
-
-    <h2>Create Listing</h2>
-
-    <h5>Welcome {{user}}</h5>
 
     <!-- {% if message %}
         <div>{{ message }}</div>
     {% endif %} -->
 
-    <form action="{% url 'create_listing' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="title" placeholder="Title">
+        <div class="form">
+            <form action="{% url 'create_listing' %}" method="post">
+                {% csrf_token %}
+                <!-- Username input -->
+                <div class="row d-flex justify-content-center mt-5 mx-5">
+                    <div 
+                    class="col-md-3 col-md-offset-4 mt-lg-5 mx-lg-5 fixed-width"
+                    style="width: 500px;">
+                        <div class="card text-center">
+                        <div class="card-header">
+                            <!-- Logo comes here-->
+                        <img
+                        src="{% static 'auctions/Leita_logo.png' %}"
+                        height="200"
+                        alt=""
+                        style="margin-top: 2px;"
+                        />
+                        </div>
+                    <div class="card-body">
+                        <h3 class="card-title"> Create a Listing</h3>
+                        <br>
+                        <input autofocus class="form-control" type="text" name="title" placeholder="Title" />
+                        <br>
+                        <input class="form-control" type="url" name="img" placeholder="Image URL" />
+                        <br>
+                        <textarea class="form-control" type="text" name="description" placeholder="Listing Description" rows="2"></textarea>
+                        <br>
+                        <input class="form-control" type="number" name="starting_bid" placeholder="Initial Bid">
+                        <br>
+                        <input class="form-control" type="text" name="category" placeholder="category">
+                        <br>
+                        <input class="btn btn-primary" type="submit" value="Create Listing">
+                    </div>
+                    </div>
+                    <div class="card text-center">
+                        Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+                    </div>
+                </div>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <input class="form-control" type="url" name="img" placeholder="Image URL">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="description" placeholder="Listing Description">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="number" name="starting_bid" placeholder="Initial Bid">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="category" placeholder="category">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Create Listing">
-    </form>
-
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
 
 {% endblock %}
