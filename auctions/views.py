@@ -11,9 +11,14 @@ from .models import User, AuctionListing, Bid, Comment, WatchList
 
 
 def index(request):
+    user = request.user
+    if user.id is None:
+        return redirect('login')
+
     auction_listing = AuctionListing.objects.filter(closed=False).order_by('-created_on')
     return render(request, "auctions/index.html",{
-        'active_listings': auction_listing })
+        'active_listings': auction_listing,
+         })
 
 
 def login_view(request):
@@ -263,7 +268,7 @@ def category_listing(request, category):
     listings = AuctionListing.objects.filter(category=category)
     return render(request, "auctions/category.html", {
         'listings': listings,
-        'cat':category
+        'cat':category,
     })
 
 def my_listings(request):
