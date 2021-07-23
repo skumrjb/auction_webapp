@@ -2,32 +2,103 @@
 
 {% block body %}
 
-{% if user.is_authenticated %}
-
-{% if not visitor_user %}
-    <h2>Hello {{user}} </h2>
+    {% if not listings %}
+        <div class="p-2">
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Listings of {{user}}</li>
+                </ol>
+            </nav>
+        </div>
     
-    <h2>Your listings for auction: </h2>
+        <div class="d-flex justify-content-center p-1">
+            <h1>{{user}}'s Listings</h1>
+        </div>
 
-    {% for listing in listings %}
-    <ul>
-        <li><a href="{% url 'listing' listing.id %}">{{listing.title}}</a></li>
-    </ul>
-    {% endfor %}
+        <h3 class="d-flex justify-content-center">You have not listed any items for Auction</h3>
 
-{% else %}
-    <h2>Hello visitor {{visitor_user}}</h2>
+    {% elif not visitor_user %}
+        <div class="p-2">
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Listings of {{user}}</li>
+                </ol>
+            </nav>
+        </div>
+    
+        <div class="d-flex justify-content-center p-1">
+            <h1>{{user}}'s Listings</h1>
+        </div>
 
-    <h2>{{listings_creator}}'s listings for auction: </h2>
+        <div 
+        class="index"
+        style="margin:3rem; margin-left:10rem">
+            <div class="row row-cols-1 row-cols-lg-5 gap-5">
+                {% for listing in listings %}
+                    <div class="col" style="width:20rem">
+                        {% if listing.closed %}
+                            <span class="badge bg-danger ms-2" style="text-align: center;">Closed</span>
+                        {% else %}
+                            <span class="badge bg-success ms-2">Active</span>
+                        {% endif %}
+                        <div class="card" style="object-fit:contain;">
+                            <img src="{{listing.img}}" class="card-img-top" alt="..." style="object-fit:contain; height: 250px;">
+                            <div class="card-body">
+                                <h5 class="card-title" style="text-align: center;">
+                                    <a href="{% url 'listing' listing.id %}">{{listing.title}}</a>
+                                </h5>
+                                <p class="card-text" style="text-overflow:clip; height:5rem; text-align: center;">{{listing.description}}</p>
+                                <p class="card-text" style="text-align: center;"><small class="text-muted">{{listing.created_on}}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
 
-    {% for listing in listings %}
-    <ul>
-        <li><a href="{% url 'listing' listing.id %}">{{listing.title}}</a></li>
-    </ul>
-    {% endfor %}
+    {% else %}
+        <div class="p-2">
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Listings of {{listings_creator}}</li>
+                </ol>
+            </nav>
+        </div>
+    
+        <div class="d-flex justify-content-center p-1">
+            <h1>{{listings_creator}}'s listings for auction:</h1>
+        </div>
 
-{% endif %}
-{% endif %}
+        <div 
+        class="index"
+        style="margin:3rem; margin-left:10rem">
+            <div class="row row-cols-1 row-cols-lg-5 gap-5">
+                {% for listing in listings %}
+                    <div class="col" style="width:20rem">
+                        {% if listing.closed %}
+                            <span class="badge bg-danger ms-2" style="text-align: center;">Closed</span>
+                        {% else %}
+                            <span class="badge bg-success ms-2">Active</span>
+                        {% endif %}
+                        <div class="card" style="object-fit:contain;">
+                            <img src="{{listing.img}}" class="card-img-top" alt="..." style="object-fit:contain; height: 250px;">
+                            <div class="card-body">
+                                <h5 class="card-title" style="text-align: center;">
+                                    <a href="{% url 'listing' listing.id %}">{{listing.title}}</a>
+                                </h5>
+                                <p class="card-text" style="text-overflow:clip; height:5rem; text-align: center;">{{listing.description}}</p>
+                                <p class="card-text" style="text-align: center;"><small class="text-muted">{{listing.created_on}}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    {% endif %}
 
 
 {% endblock %}

@@ -26,6 +26,11 @@
             <div class="row row-cols-1 row-cols-lg-5 gap-5">
                 {% for listing in watchlist.listing.all %}
                     <div class="col" style="width:20rem">
+                        {% if listing.closed %}
+                            <span class="badge bg-danger ms-2" style="text-align: center;">Closed</span>
+                        {% else %}
+                            <span class="badge bg-success ms-2">Active</span>
+                        {% endif %}
                         <div class="card" style="object-fit:contain;">
                             <img src="{{listing.img}}" class="card-img-top" alt="..." style="object-fit:contain; height: 250px;">
                             <div class="card-body">
