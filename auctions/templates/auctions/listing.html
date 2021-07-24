@@ -32,14 +32,6 @@
     {% else %}
     <h3> The winner of the Auction is {{listing.last_bid.user}}</h3>
     {% endif %}
-{% else %}
-    {% if listing.user == user %}
-        <form action="{% url 'close_listing' listing=listing.id %}" method="post">
-            {% csrf_token %}
-            <button name="close-listing" class="btn btn-danger" type="submit" value="closed">Close Bid for Auction</button>
-    {% else %}
-        <h3>{{message}}</h3>
-    {% endif %}
 {% endif %}
 
 <div class="modal-body row">
@@ -125,6 +117,16 @@
                             <li>Category: <a href="{% url 'category_listing' listing.category %}">{{listing.category}}</a></li>
                             <li>Created on: {{listing.created_on}}</li>
                         </ul>
+                        {% if listing.closed == False and listing.user == user %}
+                            <form action="{% url 'close_listing' listing=listing.id %}" method="post">
+                                {% csrf_token %}
+                                <div style="padding-top: 10px; padding-left: 9rem;">
+                                    <button name="close-listing" class="btn btn-danger" type="submit" value="closed">Close Auction</button>
+                                </div>
+                            </form>
+                            {% else %}
+                                <h3>{{message}}</h3>
+                        {% endif %}
                     </div>
                     <!-- Details End -->
                 </div>

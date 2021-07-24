@@ -1,5 +1,5 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
 {% block body %}
 
     {% if not listings %}
@@ -34,8 +34,8 @@
 
         <div 
         class="index"
-        style="margin:3rem; margin-left:10rem">
-            <div class="row row-cols-1 row-cols-lg-5 gap-5">
+        style="margin:3rem; margin-left:9rem">
+            <div class="row row-cols-1 row-cols-lg-5 gap-4">
                 {% for listing in listings %}
                     <div class="col" style="width:20rem">
                         {% if listing.closed %}
@@ -74,8 +74,8 @@
 
         <div 
         class="index"
-        style="margin:3rem; margin-left:10rem">
-            <div class="row row-cols-1 row-cols-lg-5 gap-5">
+        style="margin:3rem; margin-left:9rem">
+            <div class="row row-cols-1 row-cols-lg-5 gap-4">
                 {% for listing in listings %}
                     <div class="col" style="width:20rem">
                         {% if listing.closed %}
@@ -99,6 +99,5 @@
         </div>
 
     {% endif %}
-
 
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
 {% block body %}
     <br>
     {% if active_listings %}
@@ -8,8 +8,8 @@
         </div>
         <div 
         class="index"
-        style="margin:5rem; margin-left:10rem">
-            <div class="row row-cols-1 row-cols-lg-5 gap-5">
+        style="margin:3rem; margin-left:9rem">
+            <div class="row row-cols-1 row-cols-lg-5 gap-4">
                 {% for listing in active_listings %}
                     <div class="col" style="width:20rem">
                         <div class="card" style="object-fit:contain;">
@@ -38,8 +38,8 @@
         </div>
         <div 
         class="index"
-        style="margin:5rem; margin-left:10rem">
-            <div class="row row-cols-1 row-cols-lg-5 gap-5">
+        style="margin:3rem; margin-left:9rem">
+            <div class="row row-cols-1 row-cols-lg-5 gap-4">
                 {% for listing in closed_listings %}
                     <div class="col" style="width:20rem">
                         <div class="card" style="object-fit:contain;">
@@ -63,4 +63,5 @@
             </div>
         </div>
     {% endif %}
+    
 {% endblock %}
